@@ -29,10 +29,17 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
 
   // Sync form state with item prop when modal opens
   useEffect(() => {
-    if (isOpen && item) {
-      setName(item.name);
-      setLink(item.link);
-      setPrice(item.price.toString());
+    if (isOpen) {
+      if (item) {
+        setName(item.name);
+        setLink(item.link);
+        setPrice(item.price.toString());
+      } else {
+        // Clear form for new item
+        setName("");
+        setLink("");
+        setPrice("");
+      }
     }
   }, [isOpen, item]);
 
@@ -59,7 +66,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
 
         <div className="form-control mb-6">
           <label className="label mb-1">
-            <span className="label-text">Item Name</span>
+            <span className="label-text">Name</span>
           </label>
           <input
             type="text"
@@ -72,7 +79,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
 
         <div className="form-control mb-6">
           <label className="label mb-1">
-            <span className="label-text">Product Link</span>
+            <span className="label-text">Link (optional)</span>
           </label>
           <input
             type="url"
@@ -107,7 +114,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
           <form method="dialog">
             <button className="btn">Cancel</button>
           </form>
-          <button className="btn btn-primary" onClick={handleSave} disabled={!name.trim() || !link.trim()}>
+          <button className="btn btn-primary" onClick={handleSave} disabled={!name.trim() || !price.trim()}>
             {isEditingNewItem ? "Add Item" : "Save"}
           </button>
         </div>

@@ -53,10 +53,18 @@ function App() {
   };
 
   const handleModalSave = async (updatedItem: WishlistItemData) => {
-    if (!wishlistContent || !editingItem) return;
+    if (!wishlistContent) return;
 
-    const updatedItems = [...wishlistContent.items];
-    updatedItems[editingItem.index] = updatedItem;
+    let updatedItems: WishlistItemData[];
+
+    if (editingItem) {
+      // Editing existing item
+      updatedItems = [...wishlistContent.items];
+      updatedItems[editingItem.index] = updatedItem;
+    } else {
+      // Adding new item
+      updatedItems = [...wishlistContent.items, updatedItem];
+    }
 
     const updatedWishlist: WishlistData = {
       name: wishlistContent.name,
@@ -71,6 +79,11 @@ function App() {
     setEditingItem(null);
   };
 
+  const handleAddItem = () => {
+    setEditingItem(null); // No existing item when adding
+    setEditModalOpen(true);
+  };
+
   return (
     <div className="w-full h-dvh flex bg-base-100 flex-0 flex-col">
       <Navbar />
@@ -81,13 +94,14 @@ function App() {
           items={wishlistContent.items}
           onSaveWishlist={handleSaveWishlist}
           onEditItem={handleEditItem}
+          onAddItem={handleAddItem}
         />
       )}
 
       <EditItemModal
         isOpen={editModalOpen}
         item={editingItem?.item}
-        isEditingNewItem={false}
+        isEditingNewItem={editingItem === null}
         onClose={handleModalClose}
         onSave={handleModalSave}
       />

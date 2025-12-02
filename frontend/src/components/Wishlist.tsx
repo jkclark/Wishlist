@@ -10,9 +10,10 @@ interface WishlistProps {
   items: WishlistItemData[];
   onSaveWishlist: (updatedWishlist: WishlistData) => Promise<void>;
   onEditItem: (item: WishlistItemData, index: number) => void;
+  onAddItem: () => void;
 }
 
-const Wishlist: React.FC<WishlistProps> = ({ name, mode, items, onSaveWishlist, onEditItem }) => {
+const Wishlist: React.FC<WishlistProps> = ({ name, mode, items, onSaveWishlist, onEditItem, onAddItem }) => {
   const updateItem = async (index: number, updatedItem: WishlistItemData) => {
     const updatedItems = [...items];
     updatedItems[index] = updatedItem;
@@ -26,8 +27,13 @@ const Wishlist: React.FC<WishlistProps> = ({ name, mode, items, onSaveWishlist, 
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-4">
-      <h2 className="text-3xl font-bold text-base-content mb-6">{name}</h2>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-base-content">{name}</h2>
+        <button className="btn btn-primary btn-sm" onClick={onAddItem}>
+          Add item
+        </button>
+      </div>
 
       {/* Mobile card view */}
       <div className="block md:hidden space-y-4">
