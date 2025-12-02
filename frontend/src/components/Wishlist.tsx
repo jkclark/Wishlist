@@ -1,13 +1,17 @@
 import React from "react";
 
+import type { WishlistItemData } from "@wishlist/common";
 import type { WishlistData, WishlistMode } from "../App";
 import WishlistItem from "./WishlistItem";
 
-interface WishlistProps extends WishlistData {
+interface WishlistProps {
+  name: string;
   mode: WishlistMode;
+  items: WishlistItemData[];
+  onSaveWishlist: (updatedWishlist: WishlistData) => Promise<void>;
 }
 
-const Wishlist: React.FC<WishlistProps> = ({ name, mode, items }) => {
+const Wishlist: React.FC<WishlistProps> = ({ name, mode, items, onSaveWishlist }) => {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
       <h2 className="text-3xl font-bold text-base-content mb-6">{name}</h2>

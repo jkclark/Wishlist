@@ -1,7 +1,9 @@
 import type { WishlistItemData } from "@wishlist/common";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/Navbar";
 import Wishlist from "./components/Wishlist";
+import { DummyWishlistStore } from "./wishlist_storage/DummyWishlistStore";
+import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 
 export type WishlistMode = "owner" | "gifter";
 export interface WishlistData {
@@ -10,39 +12,42 @@ export interface WishlistData {
 }
 
 function App() {
+  const wishlistStore: WishlistStore = useMemo(() => new DummyWishlistStore(), []);
+
+  const [wishlistId, setWishlistId] = useState<string>("dummy-id");
   const [wishlistMode, setWishlistMode] = useState<WishlistMode | null>("owner");
-  const [wishlistContent, setWishlistContent] = useState<WishlistData>({
-    name: "My Wishlist",
-    items: [
-      {
-        name: "Wireless Headphones",
-        link: "https://example.com/headphones",
-        price: 99.99,
-        bought: true,
-        received: false,
-      },
-      {
-        name: "Smart Watch",
-        link: "https://example.com/smartwatch",
-        price: 199.99,
-        bought: false,
-        received: false,
-      },
-      {
-        name: "E-Reader",
-        link: "https://example.com/ereader",
-        price: 129.99,
-        bought: false,
-        received: false,
-      },
-    ],
-  });
+  const [wishlistContent, setWishlistContent] = useState<WishlistData | null>(null);
+
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      if (wishlistMode) {
+        const data = await wishlistStore.getWishlist(wishlistId);
+        setWishlistContent(data);
+      }
+    };
+
+    fetchWishlist();
+  }, [wishlistId, wishlistMode, wishlistStore]);
+
+  const handleSaveWishlist = async (updatedWishlist: WishlistData) => {
+    try {
+      await wishlistStore.saveWishlist(wishlistId, updatedWishlist);
+      setWishlistContent(updatedWishlist);
+    } catch (error) {
+      console.error("Failed to save wishlist:", error);
+    }
+  };
 
   return (
     <div className="w-full h-dvh flex bg-base-100 flex-0 flex-col">
       <Navbar />
       {wishlistMode && wishlistContent && (
-        <Wishlist name={wishlistContent.name} mode={wishlistMode} items={wishlistContent.items} />
+        <Wishlist
+          name={wishlistContent.name}
+          mode={wishlistMode}
+          items={wishlistContent.items}
+          onSaveWishlist={handleSaveWishlist}
+        />
       )}
     </div>
   );
