@@ -3,7 +3,7 @@ import { WishlistStore } from "./WishlistStore";
 
 export class DummyWishlistStore extends WishlistStore {
   private dummyWishlist: WishlistData = {
-    name: "My Wishlist",
+    name: "Josh's wishlist",
     items: [
       {
         name: "Wireless Headphones HyperX Cloud III S Wireless Headphones",
@@ -35,7 +35,7 @@ export class DummyWishlistStore extends WishlistStore {
       },
       {
         name: "Smart Watch",
-        link: "https://example.com/smartwatch",
+        link: "",
         price: 199.99,
         bought: false,
         received: false,
