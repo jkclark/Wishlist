@@ -19,6 +19,11 @@ function App() {
   const [wishlistMode, setWishlistMode] = useState<WishlistMode | null>("gifter");
   const [wishlistContent, setWishlistContent] = useState<WishlistData | null>(null);
 
+  // For development only
+  const toggleMode = () => {
+    setWishlistMode((prevMode) => (prevMode === "owner" ? "gifter" : "owner"));
+  };
+
   // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<{ item: WishlistItemData; index: number } | null>(null);
@@ -86,6 +91,11 @@ function App() {
 
   return (
     <div className="w-full h-dvh flex bg-base-100 flex-0 flex-col">
+      {/* For development only */}
+      <button className="btn btn-secondary w-[200px] mx-auto" onClick={toggleMode}>
+        Current mode: {wishlistMode}
+      </button>
+
       <Navbar />
       {wishlistMode && wishlistContent && (
         <Wishlist
