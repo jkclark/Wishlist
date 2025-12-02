@@ -1,5 +1,5 @@
+import type { WishlistItemData } from "@wishlist/common";
 import React from "react";
-import type { WishlistItemData } from "./Wishlist";
 
 const WishlistItem: React.FC<WishlistItemData> = ({ name, link, price }) => {
   return (

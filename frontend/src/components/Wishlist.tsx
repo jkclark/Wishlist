@@ -1,11 +1,6 @@
+import type { WishlistItemData } from "@wishlist/common";
 import React from "react";
 import WishlistItem from "./WishlistItem";
-
-export interface WishlistItemData {
-  name: string;
-  link: string;
-  price: number;
-}
 
 interface WishlistProps {
   name: string;
