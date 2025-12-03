@@ -55,10 +55,6 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
     onClose();
   };
 
-  const handleClose = () => {
-    onClose();
-  };
-
   return (
     <dialog ref={dialogRef} className="modal" onClose={onClose}>
       <div className="modal-box">

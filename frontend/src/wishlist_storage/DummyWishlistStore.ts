@@ -1,8 +1,9 @@
-import type { WishlistData } from "../App";
+import type { WishlistData } from "@wishlist/common";
 import { WishlistStore } from "./WishlistStore";
 
 export class DummyWishlistStore extends WishlistStore {
   private dummyWishlist: WishlistData = {
+    id: "dummy-id",
     name: "Josh's wishlist",
     items: [
       {
@@ -50,7 +51,26 @@ export class DummyWishlistStore extends WishlistStore {
     ],
   };
 
+  async createWishlist(name: string): Promise<WishlistData> {
+    console.log(`DummyWishlistStore: Creating wishlist with name: ${name}`);
+
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const dummyWishlist: WishlistData = {
+      id: "new-dummy-wishlist-id",
+      name,
+      items: [],
+    };
+    console.log(`DummyWishlistStore: Created wishlist with id: ${dummyWishlist.id}`);
+    return dummyWishlist;
+  }
+
   async getWishlist(id: string): Promise<WishlistData> {
+    if (!id) {
+      throw new Error("Invalid wishlist ID");
+    }
+
     console.log(`DummyWishlistStore: Getting wishlist with id: ${id}`);
 
     // Simulate network delay

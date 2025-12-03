@@ -1,5 +1,6 @@
-import type { WishlistItemData } from "@wishlist/common";
+import type { WishlistData, WishlistItemData } from "@wishlist/common";
 import { useEffect, useMemo, useState } from "react";
+import CreateOrLoadWishlistModal from "./components/CreateOrLoadWishlistModal";
 import DeleteItemModal from "./components/DeleteItemModal";
 import EditItemModal from "./components/EditItemModal";
 import Navbar from "./components/Navbar";
@@ -8,17 +9,13 @@ import { DummyWishlistStore } from "./wishlist_storage/DummyWishlistStore";
 import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 
 export type WishlistMode = "owner" | "gifter";
-export interface WishlistData {
-  name: string;
-  items: WishlistItemData[];
-}
 
 function App() {
   const wishlistStore: WishlistStore = useMemo(() => new DummyWishlistStore(), []);
 
-  const [wishlistId, setWishlistId] = useState<string>("dummy-id");
+  const [wishlistId, setWishlistId] = useState<string | null>("dummy-id");
+  const [wishlistData, setWishlistData] = useState<WishlistData | null>(null);
   const [wishlistMode, setWishlistMode] = useState<WishlistMode | null>("gifter");
-  const [wishlistContent, setWishlistContent] = useState<WishlistData | null>(null);
 
   // For development only
   const toggleMode = () => {
@@ -33,11 +30,14 @@ function App() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingItem, setDeletingItem] = useState<{ name: string; index: number } | null>(null);
 
+  // Create/Load modal state
+  const [createLoadModalOpen, setCreateLoadModalOpen] = useState(false);
+
   useEffect(() => {
     const fetchWishlist = async () => {
-      if (wishlistMode) {
+      if (wishlistId && wishlistMode) {
         const data = await wishlistStore.getWishlist(wishlistId);
-        setWishlistContent(data);
+        setWishlistData(data);
       }
     };
 
@@ -46,7 +46,12 @@ function App() {
 
   const handleSaveWishlist = async (updatedWishlist: WishlistData) => {
     // Optimistic update - update UI immediately
-    setWishlistContent(updatedWishlist);
+    setWishlistData(updatedWishlist);
+
+    if (!wishlistId) {
+      console.error("No wishlist ID set. Cannot save wishlist.");
+      return;
+    }
 
     try {
       await wishlistStore.saveWishlist(wishlistId, updatedWishlist);
@@ -62,22 +67,26 @@ function App() {
     setEditModalOpen(true);
   };
 
-  const handleModalSave = async (updatedItem: WishlistItemData) => {
-    if (!wishlistContent) return;
+  const handleEditModalSave = async (updatedItem: WishlistItemData) => {
+    if (!wishlistId || !wishlistData) {
+      console.error("Either wishlist ID or data is not set. Cannot save item.");
+      return;
+    }
 
     let updatedItems: WishlistItemData[];
 
     if (editingItem) {
       // Editing existing item
-      updatedItems = [...wishlistContent.items];
+      updatedItems = [...wishlistData.items];
       updatedItems[editingItem.index] = updatedItem;
     } else {
       // Adding new item
-      updatedItems = [...wishlistContent.items, updatedItem];
+      updatedItems = [...wishlistData.items, updatedItem];
     }
 
     const updatedWishlist: WishlistData = {
-      name: wishlistContent.name,
+      id: wishlistId,
+      name: wishlistData.name,
       items: updatedItems,
     };
 
@@ -99,14 +108,18 @@ function App() {
     setDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = async () => {
-    if (!wishlistContent || !deletingItem) return;
+  const handleDeleteItemConfirm = async () => {
+    if (!wishlistId || !wishlistData || !deletingItem) {
+      console.error("Either wishlist ID, data, or deleting item is not set. Cannot delete item.");
+      return;
+    }
 
-    const updatedItems = [...wishlistContent.items];
+    const updatedItems = [...wishlistData.items];
     updatedItems.splice(deletingItem.index, 1);
 
     const updatedWishlist: WishlistData = {
-      name: wishlistContent.name,
+      id: wishlistId,
+      name: wishlistData.name,
       items: updatedItems,
     };
 
@@ -120,14 +133,48 @@ function App() {
     setDeletingItem(null);
   };
 
+  const handleCreateOrLoadWishlist = () => {
+    setCreateLoadModalOpen(true);
+  };
+
+  const handleCreateWishlist = async (name: string) => {
+    try {
+      // Create wishlist using the store and get the new ID
+      const newWishlist = await wishlistStore.createWishlist(name);
+
+      // Update state with new wishlist
+      setWishlistId(newWishlist.id);
+      setWishlistData(newWishlist);
+      setCreateLoadModalOpen(false);
+    } catch (error) {
+      console.error("Failed to create wishlist:", error);
+      // TODO: Show error message to user
+    }
+  };
+
+  const handleLoadWishlist = async (id: string) => {
+    try {
+      const data = await wishlistStore.getWishlist(id);
+      setWishlistId(id);
+      setWishlistData(data);
+      setCreateLoadModalOpen(false);
+    } catch (error) {
+      console.error("Failed to load wishlist:", error);
+      // TODO: Show error message to user
+    }
+  };
+
+  const handleCreateOrLoadModalClose = () => {
+    setCreateLoadModalOpen(false);
+  };
+
   return (
     <div className="w-full h-dvh flex bg-base-100 flex-0 flex-col">
-      <Navbar wishlistName={wishlistContent?.name} />
-      {wishlistMode && wishlistContent && (
+      <Navbar wishlistName={wishlistData?.name} onNewLoad={handleCreateOrLoadWishlist} />
+      {wishlistMode && wishlistData && (
         <Wishlist
-          name={wishlistContent.name}
           mode={wishlistMode}
-          items={wishlistContent.items}
+          wishlistData={wishlistData}
           onSaveWishlist={handleSaveWishlist}
           onEditItem={handleEditItem}
           onDeleteItem={handleDeleteItem}
@@ -140,14 +187,21 @@ function App() {
         item={editingItem?.item}
         isEditingNewItem={editingItem === null}
         onClose={handleModalClose}
-        onSave={handleModalSave}
+        onSave={handleEditModalSave}
       />
 
       <DeleteItemModal
         isOpen={deleteModalOpen}
         itemName={deletingItem?.name || ""}
-        onConfirm={handleDeleteConfirm}
+        onConfirm={handleDeleteItemConfirm}
         onCancel={handleDeleteCancel}
+      />
+
+      <CreateOrLoadWishlistModal
+        isOpen={createLoadModalOpen}
+        onClose={handleCreateOrLoadModalClose}
+        onCreate={handleCreateWishlist}
+        onLoad={handleLoadWishlist}
       />
 
       {/* For development only */}

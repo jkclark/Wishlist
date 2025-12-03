@@ -1,13 +1,12 @@
 import React from "react";
 
-import type { WishlistItemData } from "@wishlist/common";
-import type { WishlistData, WishlistMode } from "../App";
+import type { WishlistData, WishlistItemData } from "@wishlist/common";
+import type { WishlistMode } from "../App";
 import WishlistItem from "./WishlistItem";
 
 interface WishlistProps {
-  name: string;
   mode: WishlistMode;
-  items: WishlistItemData[];
+  wishlistData: WishlistData;
   onSaveWishlist: (updatedWishlist: WishlistData) => Promise<void>;
   onEditItem: (item: WishlistItemData, index: number) => void;
   onDeleteItem: (item: WishlistItemData, index: number) => void;
@@ -15,20 +14,20 @@ interface WishlistProps {
 }
 
 const Wishlist: React.FC<WishlistProps> = ({
-  name,
   mode,
-  items,
+  wishlistData,
   onSaveWishlist,
   onEditItem,
   onDeleteItem,
   onAddItem,
 }) => {
   const updateItem = async (index: number, updatedItem: WishlistItemData) => {
-    const updatedItems = [...items];
+    const updatedItems = [...wishlistData.items];
     updatedItems[index] = updatedItem;
 
     const updatedWishlist: WishlistData = {
-      name,
+      id: wishlistData.id,
+      name: wishlistData.name,
       items: updatedItems,
     };
 
@@ -59,7 +58,7 @@ const Wishlist: React.FC<WishlistProps> = ({
             </tr>
           </thead>
           <tbody>
-            {items.map((item, index) => (
+            {wishlistData.items.map((item, index) => (
               <WishlistItem
                 key={index}
                 mode={mode}
@@ -80,7 +79,7 @@ const Wishlist: React.FC<WishlistProps> = ({
 
       {/* Mobile card view */}
       <div className="md:hidden space-y-4">
-        {items.map((item, index) => (
+        {wishlistData.items.map((item, index) => (
           <WishlistItem
             key={index}
             mode={mode}

@@ -5,3 +5,9 @@ export interface WishlistItemData {
   bought: boolean;
   received: boolean;
 }
+
+export interface WishlistData {
+  id: string;
+  name: string;
+  items: WishlistItemData[];
+}
