@@ -14,11 +14,11 @@ export class DummyWishlistStore extends WishlistStore {
         received: false,
       },
       {
-        name: "Smart Watch",
+        name: "Smart Watch (received but not marked as bought)",
         link: "https://example.com/smartwatch",
         price: 199.99,
         bought: false,
-        received: false,
+        received: true,
       },
       {
         name: "E-Reader",

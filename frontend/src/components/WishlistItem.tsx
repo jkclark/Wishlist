@@ -39,7 +39,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
       name,
       link,
       price,
-      bought,
+      bought: !received ? true : bought,
       received: !received,
     };
     await onUpdate(updatedItem);
@@ -85,7 +85,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
           <td className="text-center">
             <input
               type="checkbox"
-              checked={bought}
+              checked={bought || received} // If received, we want to check bought as well
               className="checkbox"
               onChange={handleBoughtChange}
               disabled={received}
@@ -192,7 +192,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                checked={bought}
+                checked={bought || received} // If received, we want to check bought as well
                 className="checkbox checkbox-sm"
                 onChange={handleBoughtChange}
                 disabled={received}
