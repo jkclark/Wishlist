@@ -1,13 +1,17 @@
 import React from "react";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  wishlistName?: string;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ wishlistName }) => {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Wishlist</a>
+        <a className="btn btn-ghost text-xl">{wishlistName || "Wishlist"}</a>
       </div>
       <div className="flex-none">
-        <button className="btn btn-primary">new wishlist</button>
+        <button className="btn btn-primary">New/Load Wishlist</button>
       </div>
     </div>
   );
