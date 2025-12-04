@@ -75,7 +75,7 @@ dist
 
 # Gatsby files
 .cache/
-public
+# public folder ignored for Gatsby, but NOT for Vite/React projects
 
 # Vuepress build output
 .vuepress/dist
