@@ -1,6 +1,5 @@
 import type { WishlistData, WishlistItemData } from "@wishlist/common";
 import { useEffect, useMemo, useState } from "react";
-import CreateOrLoadWishlistModal from "./components/CreateOrLoadWishlistModal";
 import DeleteItemModal from "./components/DeleteItemModal";
 import EditItemModal from "./components/EditItemModal";
 import Navbar from "./components/Navbar";
@@ -27,9 +26,6 @@ function App() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingItem, setDeletingItem] = useState<{ name: string; index: number } | null>(null);
 
-  // Create/Load modal state
-  const [createOrLoadModalOpen, setCreateOrLoadModalOpen] = useState(false);
-
   useEffect(() => {
     const fetchWishlist = async () => {
       if (wishlistId && wishlistMode) {
@@ -40,6 +36,12 @@ function App() {
 
     fetchWishlist();
   }, [wishlistId, wishlistMode, wishlistStore]);
+
+  const resetWishlistState = () => {
+    setWishlistId(null);
+    setWishlistData(null);
+    setWishlistMode(null);
+  };
 
   const handleSaveWishlist = async (updatedWishlist: WishlistData) => {
     // Optimistic update - update UI immediately
@@ -130,10 +132,6 @@ function App() {
     setDeletingItem(null);
   };
 
-  const handleCreateOrLoadWishlistModalOpen = () => {
-    setCreateOrLoadModalOpen(true);
-  };
-
   const handleCreateWishlist = async (name: string) => {
     try {
       // Create wishlist using the store and get the new ID
@@ -143,7 +141,6 @@ function App() {
       setWishlistId(newWishlist.id);
       setWishlistData(newWishlist);
       setWishlistMode("owner"); // Assume creator is the owner
-      setCreateOrLoadModalOpen(false);
     } catch (error) {
       console.error("Failed to create wishlist:", error);
       // TODO: Show error message to user
@@ -155,22 +152,17 @@ function App() {
       const data = await wishlistStore.getWishlist(id);
       setWishlistId(id);
       setWishlistData(data);
-      setCreateOrLoadModalOpen(false);
     } catch (error) {
       console.error("Failed to load wishlist:", error);
       // TODO: Show error message to user
     }
   };
 
-  const handleCreateOrLoadModalClose = () => {
-    setCreateOrLoadModalOpen(false);
-  };
-
   return (
     <div className="w-full h-dvh flex bg-base-100 flex-0 flex-col">
       <Navbar
         wishlistName={wishlistData?.name}
-        onNewLoad={handleCreateOrLoadWishlistModalOpen}
+        onNewLoad={resetWishlistState}
         showNavbarContents={!!(wishlistId && wishlistData && wishlistMode)}
       />
 
@@ -210,13 +202,6 @@ function App() {
         itemName={deletingItem?.name || ""}
         onConfirm={handleDeleteItemConfirm}
         onCancel={handleDeleteCancel}
-      />
-
-      <CreateOrLoadWishlistModal
-        isOpen={createOrLoadModalOpen}
-        onClose={handleCreateOrLoadModalClose}
-        onCreate={handleCreateWishlist}
-        onLoad={handleLoadWishlist}
       />
     </div>
   );
