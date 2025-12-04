@@ -171,7 +171,11 @@ function App() {
 
   return (
     <div className="w-full h-dvh flex bg-base-100 flex-0 flex-col">
-      <Navbar wishlistName={wishlistData?.name} onNewLoad={handleCreateOrLoadWishlistModalOpen} />
+      <Navbar
+        wishlistName={wishlistData?.name}
+        onNewLoad={handleCreateOrLoadWishlistModalOpen}
+        showNavbarContents={!!(wishlistId && wishlistData && wishlistMode)}
+      />
 
       {/* Welcome menu shown when no wishlist is loaded */}
       {(!wishlistId || !wishlistData || !wishlistMode) && (
