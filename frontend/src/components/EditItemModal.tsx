@@ -11,9 +11,13 @@ interface EditItemModalProps {
 
 const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNewItem, onClose, onSave }) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
+
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [price, setPrice] = useState("");
+
+  const [buttonText, setButtonText] = useState("Save");
+  const [modalTitle, setModalTitle] = useState("Edit Item");
 
   // Control dialog open/close state
   useEffect(() => {
@@ -30,6 +34,10 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
   // Sync form state with item prop when modal opens
   useEffect(() => {
     if (isOpen) {
+      // Set button text and title when modal opens to prevent flickering
+      setModalTitle(isEditingNewItem ? "Add Item" : "Edit Item");
+      setButtonText(isEditingNewItem ? "Add Item" : "Save");
+
       if (item) {
         setName(item.name);
         setLink(item.link);
@@ -41,7 +49,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
         setPrice("");
       }
     }
-  }, [isOpen, item]);
+  }, [isOpen, item, isEditingNewItem]);
 
   const handleSave = () => {
     const updatedItem: WishlistItemData = {
@@ -58,7 +66,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
   return (
     <dialog ref={dialogRef} className="modal" onClose={onClose}>
       <div className="modal-box">
-        <h3 className="font-bold text-xl mb-4">{isEditingNewItem ? "Add Item" : "Edit Item"}</h3>
+        <h3 className="font-bold text-xl mb-4">{modalTitle}</h3>
 
         <div className="form-control mb-6">
           <label className="label mb-1">
@@ -111,7 +119,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
             <button className="btn">Cancel</button>
           </form>
           <button className="btn btn-primary" onClick={handleSave} disabled={!name.trim()}>
-            {isEditingNewItem ? "Add Item" : "Save"}
+            {buttonText}
           </button>
         </div>
       </div>
