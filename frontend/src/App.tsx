@@ -6,6 +6,7 @@ import EditItemModal from "./components/EditItemModal";
 import Navbar from "./components/Navbar";
 import WelcomeMenu from "./components/WelcomeMenu";
 import Wishlist from "./components/Wishlist";
+import WishlistModeMenu from "./components/WishlistModeMenu";
 import { DummyWishlistStore } from "./wishlist_storage/DummyWishlistStore";
 import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 
@@ -16,12 +17,7 @@ function App() {
 
   const [wishlistId, setWishlistId] = useState<string | null>(null);
   const [wishlistData, setWishlistData] = useState<WishlistData | null>(null);
-  const [wishlistMode, setWishlistMode] = useState<WishlistMode | null>("gifter");
-
-  // For development only
-  const toggleMode = () => {
-    setWishlistMode((prevMode) => (prevMode === "owner" ? "gifter" : "owner"));
-  };
+  const [wishlistMode, setWishlistMode] = useState<WishlistMode | null>(null);
 
   // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -146,6 +142,7 @@ function App() {
       // Update state with new wishlist
       setWishlistId(newWishlist.id);
       setWishlistData(newWishlist);
+      setWishlistMode("owner"); // Assume creator is the owner
       setCreateOrLoadModalOpen(false);
     } catch (error) {
       console.error("Failed to create wishlist:", error);
@@ -178,8 +175,13 @@ function App() {
       />
 
       {/* Welcome menu shown when no wishlist is loaded */}
-      {(!wishlistId || !wishlistData || !wishlistMode) && (
+      {(!wishlistId || !wishlistData) && !wishlistMode && (
         <WelcomeMenu onCreateWishlist={handleCreateWishlist} onLoadWishlist={handleLoadWishlist} />
+      )}
+
+      {/* Wishlist mode menu after wishlist is loaded */}
+      {wishlistId && wishlistData && !wishlistMode && (
+        <WishlistModeMenu wishlistName={wishlistData.name} onSelectMode={(mode) => setWishlistMode(mode)} />
       )}
 
       {/* Wishlist view */}
@@ -216,11 +218,6 @@ function App() {
         onCreate={handleCreateWishlist}
         onLoad={handleLoadWishlist}
       />
-
-      {/* For development only */}
-      <button className="btn btn-accent w-[200px] mx-auto" onClick={toggleMode}>
-        Current mode: {wishlistMode}
-      </button>
     </div>
   );
 }
