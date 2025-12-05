@@ -7,7 +7,12 @@ interface DeleteItemModalProps {
   onCancel: () => void;
 }
 
-const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ isOpen, itemName, onConfirm, onCancel }) => {
+const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
+  isOpen,
+  itemName,
+  onConfirm,
+  onCancel,
+}) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   // Control dialog open/close state
@@ -30,9 +35,13 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ isOpen, itemName, onC
   return (
     <dialog ref={dialogRef} className="modal">
       <div className="modal-box">
-        <h3 className="font-bold text-lg mb-4">Delete Item</h3>
-        <p className="py-4">Are you sure you want to delete the following item?</p>
-        <div className="font-semibold bg-base-200 p-3 rounded mb-6">{itemName}</div>
+        <h3 className="mb-4 text-lg font-bold">Delete Item</h3>
+        <p className="py-4">
+          Are you sure you want to delete the following item?
+        </p>
+        <div className="bg-base-200 mb-6 rounded p-3 font-semibold">
+          {itemName}
+        </div>
         <div className="modal-action">
           <form method="dialog">
             <button className="btn" onClick={onCancel}>

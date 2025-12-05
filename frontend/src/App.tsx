@@ -12,7 +12,10 @@ import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 export type WishlistMode = "owner" | "gifter";
 
 function App() {
-  const wishlistStore: WishlistStore = useMemo(() => new DummyWishlistStore(), []);
+  const wishlistStore: WishlistStore = useMemo(
+    () => new DummyWishlistStore(),
+    [],
+  );
 
   const [wishlistId, setWishlistId] = useState<string | null>(null);
   const [wishlistData, setWishlistData] = useState<WishlistData | null>(null);
@@ -20,11 +23,17 @@ function App() {
 
   // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<{ item: WishlistItemData; index: number } | null>(null);
+  const [editingItem, setEditingItem] = useState<{
+    item: WishlistItemData;
+    index: number;
+  } | null>(null);
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deletingItem, setDeletingItem] = useState<{ name: string; index: number } | null>(null);
+  const [deletingItem, setDeletingItem] = useState<{
+    name: string;
+    index: number;
+  } | null>(null);
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -109,7 +118,9 @@ function App() {
 
   const handleDeleteItemConfirm = async () => {
     if (!wishlistId || !wishlistData || !deletingItem) {
-      console.error("Either wishlist ID, data, or deleting item is not set. Cannot delete item.");
+      console.error(
+        "Either wishlist ID, data, or deleting item is not set. Cannot delete item.",
+      );
       return;
     }
 
@@ -158,7 +169,7 @@ function App() {
   };
 
   return (
-    <div className="w-full h-dvh flex bg-base-100 flex-0 flex-col">
+    <div className="bg-base-100 flex h-dvh w-full flex-0 flex-col">
       <Navbar
         wishlistId={wishlistData?.id}
         wishlistName={wishlistData?.name}
@@ -168,12 +179,18 @@ function App() {
 
       {/* Welcome menu shown when no wishlist is loaded */}
       {(!wishlistId || !wishlistData) && !wishlistMode && (
-        <WelcomeMenu onCreateWishlist={handleCreateWishlist} onLoadWishlist={handleLoadWishlist} />
+        <WelcomeMenu
+          onCreateWishlist={handleCreateWishlist}
+          onLoadWishlist={handleLoadWishlist}
+        />
       )}
 
       {/* Wishlist mode menu after wishlist is loaded */}
       {wishlistId && wishlistData && !wishlistMode && (
-        <WishlistModeMenu wishlistName={wishlistData.name} onSelectMode={(mode) => setWishlistMode(mode)} />
+        <WishlistModeMenu
+          wishlistName={wishlistData.name}
+          onSelectMode={(mode) => setWishlistMode(mode)}
+        />
       )}
 
       {/* Wishlist view */}

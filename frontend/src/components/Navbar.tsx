@@ -7,7 +7,12 @@ interface NavbarProps {
   showNavbarContents: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ wishlistId, wishlistName, onNewLoad, showNavbarContents }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  wishlistId,
+  wishlistName,
+  onNewLoad,
+  showNavbarContents,
+}) => {
   // For now, don't do anything with ID. This console.log is here to allow
   // the build to succeed without "unused variable" errors.
   console.log("Rendering navbar with wishlist ID:", wishlistId);
@@ -17,7 +22,9 @@ const Navbar: React.FC<NavbarProps> = ({ wishlistId, wishlistName, onNewLoad, sh
       {/* Left side - Wishlist name */}
       <div className="navbar-start flex-1">
         {showNavbarContents && wishlistName && (
-          <span className="font-medium text-lg md:text-xl px-4">{wishlistName}</span>
+          <span className="px-4 text-lg font-medium md:text-xl">
+            {wishlistName}
+          </span>
         )}
       </div>
 
@@ -27,7 +34,11 @@ const Navbar: React.FC<NavbarProps> = ({ wishlistId, wishlistName, onNewLoad, sh
           <>
             {/* Mobile hamburger menu */}
             <div className="dropdown dropdown-end md:hidden">
-              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -45,7 +56,7 @@ const Navbar: React.FC<NavbarProps> = ({ wishlistId, wishlistName, onNewLoad, sh
               </div>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 border rounded-box z-[1] mt-3 w-52 p-2 shadow"
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 border p-2 shadow"
               >
                 <li>
                   <button className="btn btn-primary" onClick={onNewLoad}>
@@ -56,7 +67,10 @@ const Navbar: React.FC<NavbarProps> = ({ wishlistId, wishlistName, onNewLoad, sh
             </div>
 
             {/* Desktop menu */}
-            <button className="btn btn-primary hidden md:flex" onClick={onNewLoad}>
+            <button
+              className="btn btn-primary hidden md:flex"
+              onClick={onNewLoad}
+            >
               New/Load Wishlist
             </button>
           </>

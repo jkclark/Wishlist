@@ -36,7 +36,7 @@ const Wishlist: React.FC<WishlistProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-6">
+    <div className="mx-auto w-full max-w-4xl px-4 pb-6 sm:px-6 lg:px-8">
       {wishlistHasItems && (
         <div className="mb-4">
           {mode === "owner" && (
@@ -48,7 +48,7 @@ const Wishlist: React.FC<WishlistProps> = ({
       )}
 
       {/* Desktop table view */}
-      <div className="hidden md:block overflow-x-auto">
+      <div className="hidden overflow-x-auto md:block">
         <table className="table">
           <thead>
             <tr>
@@ -80,8 +80,10 @@ const Wishlist: React.FC<WishlistProps> = ({
           </tbody>
         </table>
         {!wishlistHasItems && (
-          <div className="flex flex-col items-center gap-4 mt-4">
-            <div className="text-center text-gray-500">This wishlist has no items!</div>
+          <div className="mt-4 flex flex-col items-center gap-4">
+            <div className="text-center text-gray-500">
+              This wishlist has no items!
+            </div>
             <button className="btn btn-primary w-30" onClick={onAddItem}>
               Add an item
             </button>
@@ -90,10 +92,12 @@ const Wishlist: React.FC<WishlistProps> = ({
       </div>
 
       {/* Mobile card view */}
-      <div className="md:hidden space-y-4">
+      <div className="space-y-4 md:hidden">
         {!wishlistHasItems && (
           <div className="flex flex-col items-center gap-4">
-            <div className="text-center text-gray-500">This wishlist has no items!</div>
+            <div className="text-center text-gray-500">
+              This wishlist has no items!
+            </div>
             <button className="btn btn-primary w-30" onClick={onAddItem}>
               Add an item
             </button>

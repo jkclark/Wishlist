@@ -58,7 +58,9 @@ export class DummyWishlistStore extends WishlistStore {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     const newWishlistId = "new-dummy-wishlist-id";
-    console.log(`DummyWishlistStore: Created wishlist with id: ${newWishlistId}`);
+    console.log(
+      `DummyWishlistStore: Created wishlist with id: ${newWishlistId}`,
+    );
 
     return newWishlistId;
   }

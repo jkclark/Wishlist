@@ -45,14 +45,22 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
     await onUpdate(updatedItem);
   };
 
-  const shouldStrikeThroughText = (bought: boolean, received: boolean, mode: WishlistMode) => {
+  const shouldStrikeThroughText = (
+    bought: boolean,
+    received: boolean,
+    mode: WishlistMode,
+  ) => {
     return (mode === "gifter" && bought) || received;
   };
 
   if (renderMode === "desktop") {
     return (
       <tr className={received ? "opacity-50" : ""}>
-        <td className={`${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}>{name}</td>
+        <td
+          className={`${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}
+        >
+          {name}
+        </td>
         <td>
           {link && (
             <a
@@ -78,7 +86,9 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
             </a>
           )}
         </td>
-        <td className={`${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}>
+        <td
+          className={`${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}
+        >
           {isNaN(price) || price <= 0 ? "" : `${price.toFixed(2)}`}
         </td>
         {mode === "gifter" && (
@@ -106,7 +116,11 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
           <div className="flex">
             {/* Edit button */}
             {mode === "owner" && !received && (
-              <button className="btn btn-sm btn-ghost" onClick={onEdit} disabled={received}>
+              <button
+                className="btn btn-sm btn-ghost"
+                onClick={onEdit}
+                disabled={received}
+              >
                 {/* Heroicons pencil in square */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +140,11 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
             )}
             {/* Delete button */}
             {mode === "owner" && !received && (
-              <button className="btn btn-sm btn-ghost" onClick={onDelete} disabled={received}>
+              <button
+                className="btn btn-sm btn-ghost"
+                onClick={onDelete}
+                disabled={received}
+              >
                 {/* Heroicons trash */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -152,15 +170,21 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
 
   // Mobile card view
   return (
-    <div className={`card bg-base-200 shadow-sm ${received ? "opacity-50" : ""}`}>
+    <div
+      className={`card bg-base-200 shadow-sm ${received ? "opacity-50" : ""}`}
+    >
       <div className="card-body p-4">
-        <div className="flex justify-between items-center mb-2">
-          <h3 className={`${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}>
+        <div className="mb-2 flex items-center justify-between">
+          <h3
+            className={`${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}
+          >
             {name}
           </h3>
         </div>
-        <div className="flex justify-between items-center mb-2">
-          <div className={`text-lg ${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}>
+        <div className="mb-2 flex items-center justify-between">
+          <div
+            className={`text-lg ${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}
+          >
             {isNaN(price) || price <= 0 ? "$ —" : `$${price.toFixed(2)}`}
           </div>
           {link && (
@@ -187,9 +211,9 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
             </a>
           )}
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           {mode === "gifter" && (
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label className="flex cursor-pointer items-center gap-2">
               <input
                 type="checkbox"
                 checked={bought || received} // If received, we want to check bought as well
@@ -200,7 +224,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
               <span className="text-sm">Bought</span>
             </label>
           )}
-          <label className="flex items-center gap-2 cursor-pointer">
+          <label className="flex cursor-pointer items-center gap-2">
             <input
               type="checkbox"
               checked={received}
@@ -228,7 +252,11 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
                   />
                 </svg>
               </button>
-              <button className="btn btn-sm btn-ghost" onClick={onDelete} disabled={received}>
+              <button
+                className="btn btn-sm btn-ghost"
+                onClick={onDelete}
+                disabled={received}
+              >
                 {/* Heroicons trash */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

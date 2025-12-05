@@ -5,7 +5,10 @@ interface NewOrLoadMenuProps {
   onLoadWishlist: (id: string) => void;
 }
 
-const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({ onCreateWishlist, onLoadWishlist }) => {
+const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
+  onCreateWishlist,
+  onLoadWishlist,
+}) => {
   const [wishlistName, setWishlistName] = useState("");
   const [wishlistId, setWishlistId] = useState("");
 
@@ -24,15 +27,15 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({ onCreateWishlist, onLoadW
   // TODO: Need to lay this out vertically for mobile
 
   return (
-    <div className="max-w-4xl w-full mx-auto h-[300px]">
+    <div className="mx-auto h-[300px] w-full max-w-4xl">
       <div className="card h-full">
         <div className="card-body">
           {/* Mobile Layout - Vertical */}
-          <div className="flex flex-col justify-center h-full md:hidden">
+          <div className="flex h-full flex-col justify-center md:hidden">
             {/* Load Section */}
-            <div className="flex flex-col gap-4 items-center mb-4">
+            <div className="mb-4 flex flex-col items-center gap-4">
               <label className="label-text text-xl font-medium">Load</label>
-              <div className="flex gap-2 w-full">
+              <div className="flex w-full gap-2">
                 <input
                   type="text"
                   className="input input-bordered flex-1"
@@ -40,19 +43,23 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({ onCreateWishlist, onLoadW
                   onChange={(e) => setWishlistId(e.target.value)}
                   placeholder="Enter wishlist ID"
                 />
-                <button className="btn btn-secondary w-16" onClick={handleLoad} disabled={!wishlistId.trim()}>
+                <button
+                  className="btn btn-secondary w-16"
+                  onClick={handleLoad}
+                  disabled={!wishlistId.trim()}
+                >
                   Load
                 </button>
               </div>
             </div>
 
             {/* Horizontal Divider */}
-            <div className="divider text-lg mb-6"></div>
+            <div className="divider mb-6 text-lg"></div>
 
             {/* Create Section */}
-            <div className="flex flex-col gap-4 items-center">
+            <div className="flex flex-col items-center gap-4">
               <label className="label-text text-xl font-medium">Create</label>
-              <div className="flex gap-2 w-full">
+              <div className="flex w-full gap-2">
                 <input
                   type="text"
                   className="input input-bordered flex-1"
@@ -72,9 +79,9 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({ onCreateWishlist, onLoadW
           </div>
 
           {/* Desktop Layout - Horizontal */}
-          <div className="hidden md:flex justify-between h-full items-center">
+          <div className="hidden h-full items-center justify-between md:flex">
             {/* Load Section */}
-            <div className="flex flex-col gap-6 flex-1 items-center">
+            <div className="flex flex-1 flex-col items-center gap-6">
               <label className="label-text text-xl font-medium">Load</label>
               <div className="flex gap-2">
                 <input
@@ -84,7 +91,11 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({ onCreateWishlist, onLoadW
                   onChange={(e) => setWishlistId(e.target.value)}
                   placeholder="Enter wishlist ID"
                 />
-                <button className="btn btn-secondary w-20" onClick={handleLoad} disabled={!wishlistId.trim()}>
+                <button
+                  className="btn btn-secondary w-20"
+                  onClick={handleLoad}
+                  disabled={!wishlistId.trim()}
+                >
                   Load
                 </button>
               </div>
@@ -94,7 +105,7 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({ onCreateWishlist, onLoadW
             <div className="divider divider-horizontal text-lg">OR</div>
 
             {/* Create Section */}
-            <div className="flex flex-col gap-6 items-center flex-1">
+            <div className="flex flex-1 flex-col items-center gap-6">
               <label className="label-text text-xl font-medium">Create</label>
               <div className="flex gap-2">
                 <input

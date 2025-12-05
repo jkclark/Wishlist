@@ -9,7 +9,13 @@ interface EditItemModalProps {
   onSave: (item: WishlistItemData) => void;
 }
 
-const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNewItem, onClose, onSave }) => {
+const EditItemModal: React.FC<EditItemModalProps> = ({
+  isOpen,
+  item,
+  isEditingNewItem,
+  onClose,
+  onSave,
+}) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const [name, setName] = useState("");
@@ -66,7 +72,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
   return (
     <dialog ref={dialogRef} className="modal" onClose={onClose}>
       <div className="modal-box">
-        <h3 className="font-bold text-xl mb-4">{modalTitle}</h3>
+        <h3 className="mb-4 text-xl font-bold">{modalTitle}</h3>
 
         <div className="form-control mb-6">
           <label className="label mb-1">
@@ -99,7 +105,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
             <span className="label-text">Price (optional)</span>
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content opacity-60 z-10 pointer-events-none">
+            <span className="text-base-content pointer-events-none absolute top-1/2 left-3 z-10 -translate-y-1/2 transform opacity-60">
               $
             </span>
             <input
@@ -118,7 +124,11 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ isOpen, item, isEditingNe
           <form method="dialog">
             <button className="btn">Cancel</button>
           </form>
-          <button className="btn btn-primary" onClick={handleSave} disabled={!name.trim()}>
+          <button
+            className="btn btn-primary"
+            onClick={handleSave}
+            disabled={!name.trim()}
+          >
             {buttonText}
           </button>
         </div>
