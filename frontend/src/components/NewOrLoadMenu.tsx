@@ -10,25 +10,40 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
   onCreateWishlist,
   onLoadWishlist,
 }) => {
+  // Data
   const [wishlistName, setWishlistName] = useState("");
   const [wishlistId, setWishlistId] = useState("");
 
+  // Loading
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const loadingElement = (
+    <span className="loading loading-spinner loading-md"></span>
+  );
+
+  // Error
   const [loadError, setLoadError] = useState<string | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
 
   const handleCreate = async () => {
-    if (wishlistName.trim()) {
+    if (wishlistName.trim() && !isCreating) {
+      setIsCreating(true);
+
       try {
         await onCreateWishlist(wishlistName.trim());
         setCreateError(null);
       } catch (error: any) {
         setCreateError("An unexpected error occurred. Please try again later.");
+      } finally {
+        setIsCreating(false);
       }
     }
   };
 
   const handleLoad = async () => {
-    if (wishlistId.trim()) {
+    if (wishlistId.trim() && !isLoading) {
+      setIsLoading(true);
+
       try {
         await onLoadWishlist(wishlistId.trim());
         setLoadError(null);
@@ -40,6 +55,8 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
         } else {
           setLoadError("An unexpected error occurred. Please try again later.");
         }
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -52,7 +69,7 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
           <div className="flex h-full flex-col justify-center md:hidden">
             {/* Load Section */}
             <div className="mb-4 flex flex-col items-center gap-4">
-              <span className="label-text text-xl font-medium">Load</span>
+              <span className="text-xl font-medium">Load</span>
               <div className="flex h-[50px] w-full gap-2">
                 <div className="flex-1">
                   <input
@@ -72,9 +89,9 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
                 <button
                   className="btn btn-secondary w-16"
                   onClick={handleLoad}
-                  disabled={!wishlistId.trim()}
+                  disabled={!wishlistId.trim() || isLoading}
                 >
-                  Load
+                  {isLoading ? loadingElement : "Load"}
                 </button>
               </div>
             </div>
@@ -84,7 +101,7 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
 
             {/* Create Section */}
             <div className="flex flex-col items-center gap-4">
-              <span className="label-text text-xl font-medium">Create</span>
+              <span className="text-xl font-medium">Create</span>
               <div className="flex h-[50px] w-full gap-2">
                 <div className="flex-1">
                   <input
@@ -104,9 +121,9 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
                 <button
                   className="btn btn-primary w-16"
                   onClick={handleCreate}
-                  disabled={!wishlistName.trim()}
+                  disabled={!wishlistName.trim() || isCreating}
                 >
-                  Create
+                  {isCreating ? loadingElement : "Create"}
                 </button>
               </div>
             </div>
@@ -116,7 +133,7 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
           <div className="hidden h-full items-center justify-between md:flex">
             {/* Load Section */}
             <div className="flex flex-1 flex-col items-center gap-6">
-              <span className="label-text text-xl font-medium">Load</span>
+              <span className="text-xl font-medium">Load</span>
               <div className="flex h-[100px] w-[300px] gap-2">
                 <div className="flex-1">
                   <input
@@ -136,9 +153,9 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
                 <button
                   className="btn btn-secondary w-20"
                   onClick={handleLoad}
-                  disabled={!wishlistId.trim()}
+                  disabled={!wishlistId.trim() || isLoading}
                 >
-                  Load
+                  {isLoading ? loadingElement : "Load"}
                 </button>
               </div>
             </div>
@@ -148,7 +165,7 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
 
             {/* Create Section */}
             <div className="flex flex-1 flex-col items-center gap-6">
-              <span className="label-text text-xl font-medium">Create</span>
+              <span className="text-xl font-medium">Create</span>
               <div className="flex h-[100px] w-[300px] gap-2">
                 <div className="flex-1">
                   <input
@@ -168,9 +185,9 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
                 <button
                   className="btn btn-primary w-20"
                   onClick={handleCreate}
-                  disabled={!wishlistName.trim()}
+                  disabled={!wishlistName.trim() || isCreating}
                 >
-                  Create
+                  {isCreating ? loadingElement : "Create"}
                 </button>
               </div>
             </div>

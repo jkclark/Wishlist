@@ -55,7 +55,7 @@ export class DummyWishlistStore extends WishlistStore {
     console.log(`DummyWishlistStore: Creating wishlist with name: ${name}`);
 
     // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const newWishlistId = "new-dummy-wishlist-id";
     console.log(
@@ -73,7 +73,7 @@ export class DummyWishlistStore extends WishlistStore {
     console.log(`DummyWishlistStore: Getting wishlist with id: ${id}`);
 
     // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     if (id === "new-dummy-wishlist-id") {
       return {
