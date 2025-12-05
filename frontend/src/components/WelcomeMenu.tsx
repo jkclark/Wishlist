@@ -2,8 +2,8 @@ import React from "react";
 import NewOrLoadMenu from "./NewOrLoadMenu";
 
 interface WelcomeMenuProps {
-  onCreateWishlist: (name: string) => void;
-  onLoadWishlist: (id: string) => void;
+  onCreateWishlist: (name: string) => Promise<void>;
+  onLoadWishlist: (id: string) => Promise<void>;
 }
 
 const WelcomeMenu: React.FC<WelcomeMenuProps> = ({

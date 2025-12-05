@@ -153,7 +153,7 @@ function App() {
       setWishlistMode("owner"); // Assume creator is the owner
     } catch (error) {
       console.error("Failed to create wishlist:", error);
-      // TODO: Show error message to user
+      throw error;
     }
   };
 
@@ -164,7 +164,7 @@ function App() {
       setWishlistData(data);
     } catch (error) {
       console.error("Failed to load wishlist:", error);
-      // TODO: Show error message to user
+      throw error;
     }
   };
 

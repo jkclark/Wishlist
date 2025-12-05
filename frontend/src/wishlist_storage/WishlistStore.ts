@@ -5,3 +5,10 @@ export abstract class WishlistStore {
   abstract getWishlist(id: string): Promise<WishlistData>;
   abstract saveWishlist(id: string, wishlistData: WishlistData): Promise<void>;
 }
+
+export class WishlistNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "WishlistNotFoundError";
+  }
+}

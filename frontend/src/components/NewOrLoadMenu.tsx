@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { WishlistNotFoundError } from "../wishlist_storage/WishlistStore";
 
 interface NewOrLoadMenuProps {
-  onCreateWishlist: (name: string) => void;
-  onLoadWishlist: (id: string) => void;
+  onCreateWishlist: (name: string) => Promise<void>;
+  onLoadWishlist: (id: string) => Promise<void>;
 }
 
 const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
@@ -12,19 +13,36 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
   const [wishlistName, setWishlistName] = useState("");
   const [wishlistId, setWishlistId] = useState("");
 
-  const handleCreate = () => {
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
+
+  const handleCreate = async () => {
     if (wishlistName.trim()) {
-      onCreateWishlist(wishlistName.trim());
+      try {
+        await onCreateWishlist(wishlistName.trim());
+        setCreateError(null);
+      } catch (error: any) {
+        setCreateError("An unexpected error occurred. Please try again later.");
+      }
     }
   };
 
-  const handleLoad = () => {
+  const handleLoad = async () => {
     if (wishlistId.trim()) {
-      onLoadWishlist(wishlistId.trim());
+      try {
+        await onLoadWishlist(wishlistId.trim());
+        setLoadError(null);
+      } catch (error: any) {
+        if (error instanceof WishlistNotFoundError) {
+          setLoadError(
+            "Wishlist not found. Please check the ID and try again.",
+          );
+        } else {
+          setLoadError("An unexpected error occurred. Please try again later.");
+        }
+      }
     }
   };
-
-  // TODO: Need to lay this out vertically for mobile
 
   return (
     <div className="mx-auto h-[300px] w-full max-w-4xl">
@@ -34,15 +52,23 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
           <div className="flex h-full flex-col justify-center md:hidden">
             {/* Load Section */}
             <div className="mb-4 flex flex-col items-center gap-4">
-              <label className="label-text text-xl font-medium">Load</label>
-              <div className="flex w-full gap-2">
-                <input
-                  type="text"
-                  className="input input-bordered flex-1"
-                  value={wishlistId}
-                  onChange={(e) => setWishlistId(e.target.value)}
-                  placeholder="Enter wishlist ID"
-                />
+              <span className="label-text text-xl font-medium">Load</span>
+              <div className="flex h-[50px] w-full gap-2">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    className="input input-bordered flex-1"
+                    value={wishlistId}
+                    onChange={(e) => setWishlistId(e.target.value)}
+                    placeholder="Enter wishlist ID"
+                  />
+                  {loadError && (
+                    <div className="text-error mt-1 ml-1 text-xs">
+                      {loadError}
+                    </div>
+                  )}
+                </div>
+
                 <button
                   className="btn btn-secondary w-16"
                   onClick={handleLoad}
@@ -58,15 +84,23 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
 
             {/* Create Section */}
             <div className="flex flex-col items-center gap-4">
-              <label className="label-text text-xl font-medium">Create</label>
-              <div className="flex w-full gap-2">
-                <input
-                  type="text"
-                  className="input input-bordered flex-1"
-                  value={wishlistName}
-                  onChange={(e) => setWishlistName(e.target.value)}
-                  placeholder="Josh's Wishlist"
-                />
+              <span className="label-text text-xl font-medium">Create</span>
+              <div className="flex h-[50px] w-full gap-2">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    className="input input-bordered flex-1"
+                    value={wishlistName}
+                    onChange={(e) => setWishlistName(e.target.value)}
+                    placeholder="Josh's Wishlist"
+                  />
+                  {createError && (
+                    <div className="text-error mt-1 ml-1 text-xs">
+                      {createError}
+                    </div>
+                  )}
+                </div>
+
                 <button
                   className="btn btn-primary w-16"
                   onClick={handleCreate}
@@ -82,15 +116,23 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
           <div className="hidden h-full items-center justify-between md:flex">
             {/* Load Section */}
             <div className="flex flex-1 flex-col items-center gap-6">
-              <label className="label-text text-xl font-medium">Load</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  className="input input-bordered flex-1"
-                  value={wishlistId}
-                  onChange={(e) => setWishlistId(e.target.value)}
-                  placeholder="Enter wishlist ID"
-                />
+              <span className="label-text text-xl font-medium">Load</span>
+              <div className="flex h-[100px] w-[300px] gap-2">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    className="input input-bordered flex-1"
+                    value={wishlistId}
+                    onChange={(e) => setWishlistId(e.target.value)}
+                    placeholder="Enter wishlist ID"
+                  />
+                  {loadError && (
+                    <div className="text-error mt-1 ml-1 text-xs">
+                      {loadError}
+                    </div>
+                  )}
+                </div>
+
                 <button
                   className="btn btn-secondary w-20"
                   onClick={handleLoad}
@@ -106,15 +148,23 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
 
             {/* Create Section */}
             <div className="flex flex-1 flex-col items-center gap-6">
-              <label className="label-text text-xl font-medium">Create</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  className="input input-bordered flex-1"
-                  value={wishlistName}
-                  onChange={(e) => setWishlistName(e.target.value)}
-                  placeholder="My Birthday Wishlist"
-                />
+              <span className="label-text text-xl font-medium">Create</span>
+              <div className="flex h-[100px] w-[300px] gap-2">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    className="input input-bordered flex-1"
+                    value={wishlistName}
+                    onChange={(e) => setWishlistName(e.target.value)}
+                    placeholder="My Birthday Wishlist"
+                  />
+                  {createError && (
+                    <div className="text-error mt-1 ml-1 text-xs">
+                      {createError}
+                    </div>
+                  )}
+                </div>
+
                 <button
                   className="btn btn-primary w-20"
                   onClick={handleCreate}
