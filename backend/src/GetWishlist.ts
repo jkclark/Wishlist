@@ -30,20 +30,6 @@ export const handler = async (
       };
     }
 
-    // Validate wishlist ID format (should match the format from CreateWishlist)
-    if (!/^[a-z]+-[a-z]+$/.test(wishlistId)) {
-      return {
-        statusCode: 400,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          message: "Invalid wishlist ID format",
-        }),
-      };
-    }
-
     const fileName = `${wishlistId}.json`;
 
     // Get object from S3
