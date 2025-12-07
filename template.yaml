@@ -100,6 +100,40 @@ Resources:
             Path: /wishlists/{id}
             Method: get
 
+  UpdateWishlistFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: UpdateWishlist
+      CodeUri: backend/lambda-package.zip
+      Handler: dist/UpdateWishlist.handler
+      Description: Lambda function to update wishlists in S3
+      Environment:
+        Variables:
+          NODE_ENV: !Ref Environment
+          S3_BUCKET: wishlist-wishlists
+      Policies:
+        - Statement:
+            - Sid: S3BucketPermissions
+              Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource:
+                - "arn:aws:s3:::wishlist-wishlists/*"
+            - Sid: S3BucketAccess
+              Effect: Allow
+              Action:
+                - s3:ListBucket
+              Resource:
+                - "arn:aws:s3:::wishlist-wishlists"
+      Events:
+        UpdateWishlist:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref WishlistHttpApi
+            Path: /wishlists/{id}
+            Method: put
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
@@ -122,3 +156,12 @@ Outputs:
   GetWishlistFunctionIamRole:
     Description: "Implicit IAM Role created for GetWishlist function"
     Value: !GetAtt GetWishlistFunctionRole.Arn
+  UpdateWishlistApi:
+    Description: "HTTP API endpoint URL for UpdateWishlist function"
+    Value: !Sub "https://${WishlistHttpApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/wishlists/{id}"
+  UpdateWishlistFunction:
+    Description: "UpdateWishlist Lambda Function ARN"
+    Value: !GetAtt UpdateWishlistFunction.Arn
+  UpdateWishlistFunctionIamRole:
+    Description: "Implicit IAM Role created for UpdateWishlist function"
+    Value: !GetAtt UpdateWishlistFunctionRole.Arn
