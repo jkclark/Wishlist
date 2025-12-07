@@ -38,11 +38,12 @@ Resources:
     Properties:
       FunctionName: CreateWishlist
       CodeUri: backend/lambda-package.zip
-      Handler: CreateWishlist.handler
-      Description: Lambda function to create wishlists in S3
+      Handler: dist/CreateWishlist.handler
+      Description: Lambda function to create wishlists in S3 bucket
       Environment:
         Variables:
           NODE_ENV: !Ref Environment
+          S3_BUCKET: wishlist-wishlists
       Policies:
         - Statement:
             - Sid: S3BucketPermissions
@@ -66,6 +67,39 @@ Resources:
             Path: /wishlists
             Method: post
 
+  GetWishlistFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GetWishlist
+      CodeUri: backend/lambda-package.zip
+      Handler: dist/GetWishlist.handler
+      Description: Lambda function to retrieve wishlists from S3
+      Environment:
+        Variables:
+          NODE_ENV: !Ref Environment
+          S3_BUCKET: wishlist-wishlists
+      Policies:
+        - Statement:
+            - Sid: S3BucketPermissions
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource:
+                - "arn:aws:s3:::wishlist-wishlists/*"
+            - Sid: S3BucketAccess
+              Effect: Allow
+              Action:
+                - s3:ListBucket
+              Resource:
+                - "arn:aws:s3:::wishlist-wishlists"
+      Events:
+        GetWishlist:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref WishlistHttpApi
+            Path: /wishlists/{id}
+            Method: get
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
@@ -79,3 +113,12 @@ Outputs:
   CreateWishlistFunctionIamRole:
     Description: "Implicit IAM Role created for CreateWishlist function"
     Value: !GetAtt CreateWishlistFunctionRole.Arn
+  GetWishlistApi:
+    Description: "HTTP API endpoint URL for GetWishlist function"
+    Value: !Sub "https://${WishlistHttpApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/wishlists/{id}"
+  GetWishlistFunction:
+    Description: "GetWishlist Lambda Function ARN"
+    Value: !GetAtt GetWishlistFunction.Arn
+  GetWishlistFunctionIamRole:
+    Description: "Implicit IAM Role created for GetWishlist function"
+    Value: !GetAtt GetWishlistFunctionRole.Arn

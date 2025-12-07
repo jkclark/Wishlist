@@ -6,7 +6,7 @@ import { adjectives, animals, uniqueNamesGenerator } from "unique-names-generato
 // Initialize S3 client
 const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
-const BUCKET_NAME = "wishlist-wishlists";
+const BUCKET_NAME = process.env.S3_BUCKET!;
 
 export const handler = async (
   event: APIGatewayProxyEventV2,
