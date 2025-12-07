@@ -6,16 +6,13 @@ import Navbar from "./components/Navbar";
 import WelcomeMenu from "./components/WelcomeMenu";
 import Wishlist from "./components/Wishlist";
 import WishlistModeMenu from "./components/WishlistModeMenu";
-import { DummyWishlistStore } from "./wishlist_storage/DummyWishlistStore";
+import { S3WishlistStore } from "./wishlist_storage/S3WishlistStore";
 import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 
 export type WishlistMode = "owner" | "gifter";
 
 function App() {
-  const wishlistStore: WishlistStore = useMemo(
-    () => new DummyWishlistStore(),
-    [],
-  );
+  const wishlistStore: WishlistStore = useMemo(() => new S3WishlistStore(), []);
 
   const [wishlistId, setWishlistId] = useState<string | null>(null);
   const [wishlistData, setWishlistData] = useState<WishlistData | null>(null);
