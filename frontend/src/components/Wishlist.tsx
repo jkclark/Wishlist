@@ -84,9 +84,11 @@ const Wishlist: React.FC<WishlistProps> = ({
             <div className="text-center text-gray-500">
               This wishlist has no items!
             </div>
-            <button className="btn btn-primary w-30" onClick={onAddItem}>
-              Add an item
-            </button>
+            {mode === "owner" && (
+              <button className="btn btn-primary w-30" onClick={onAddItem}>
+                Add an item
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -98,9 +100,11 @@ const Wishlist: React.FC<WishlistProps> = ({
             <div className="text-center text-gray-500">
               This wishlist has no items!
             </div>
-            <button className="btn btn-primary w-30" onClick={onAddItem}>
-              Add an item
-            </button>
+            {mode === "owner" && (
+              <button className="btn btn-primary w-30" onClick={onAddItem}>
+                Add an item
+              </button>
+            )}
           </div>
         )}
         {wishlistHasItems &&
