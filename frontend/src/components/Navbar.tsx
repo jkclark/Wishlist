@@ -1,4 +1,5 @@
 import React from "react";
+import ShareButton from "./ShareButton";
 
 interface NavbarProps {
   wishlistId?: string;
@@ -29,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Right side - hamburger menu on mobile, button on desktop */}
-      <div className="navbar-end flex-0">
+      <div className="navbar-end flex flex-0 gap-2">
         {showNavbarContents && (
           <>
             {/* Mobile hamburger menu */}
@@ -67,6 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Desktop menu */}
+            {wishlistName && <ShareButton wishlistName={wishlistName} />}
             <button
               className="btn btn-primary hidden md:flex"
               onClick={onNewLoad}
