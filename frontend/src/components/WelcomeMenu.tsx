@@ -4,11 +4,13 @@ import NewOrLoadMenu from "./NewOrLoadMenu";
 interface WelcomeMenuProps {
   onCreateWishlist: (name: string) => Promise<void>;
   onLoadWishlist: (id: string) => Promise<void>;
+  initialWishlistId?: string;
 }
 
 const WelcomeMenu: React.FC<WelcomeMenuProps> = ({
   onCreateWishlist,
   onLoadWishlist,
+  initialWishlistId,
 }) => {
   return (
     <div className="flex flex-col items-center justify-center px-4">
@@ -23,6 +25,7 @@ const WelcomeMenu: React.FC<WelcomeMenuProps> = ({
       <NewOrLoadMenu
         onCreateWishlist={onCreateWishlist}
         onLoadWishlist={onLoadWishlist}
+        initialWishlistId={initialWishlistId}
       />
     </div>
   );

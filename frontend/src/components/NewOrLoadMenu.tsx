@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { WishlistNotFoundError } from "../wishlist_storage/WishlistStore";
 
 interface NewOrLoadMenuProps {
   onCreateWishlist: (name: string) => Promise<void>;
   onLoadWishlist: (id: string) => Promise<void>;
+  initialWishlistId?: string;
 }
 
 const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
   onCreateWishlist,
   onLoadWishlist,
+  initialWishlistId,
 }) => {
   // Data
   const [wishlistName, setWishlistName] = useState("");
-  const [wishlistId, setWishlistId] = useState("");
+  const [wishlistId, setWishlistId] = useState(initialWishlistId || "");
 
   // Loading
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +26,13 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
   // Error
   const [loadError, setLoadError] = useState<string | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
+
+  // Auto-load wishlist if initialWishlistId is provided
+  useEffect(() => {
+    if (initialWishlistId && initialWishlistId.trim()) {
+      handleLoad();
+    }
+  }, [initialWishlistId]);
 
   const handleCreate = async () => {
     if (wishlistName.trim() && !isCreating) {

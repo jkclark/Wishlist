@@ -17,6 +17,7 @@ function App() {
   const [wishlistId, setWishlistId] = useState<string | null>(null);
   const [wishlistData, setWishlistData] = useState<WishlistData | null>(null);
   const [wishlistMode, setWishlistMode] = useState<WishlistMode | null>(null);
+  const [hasAttemptedAutoLoad, setHasAttemptedAutoLoad] = useState(false);
 
   // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -32,6 +33,43 @@ function App() {
     index: number;
   } | null>(null);
 
+  // NOTE: I felt that React Router would have been overkill for this simple single-page app,
+  // so I implemented basic URL handling manually.
+  // Check URL for wishlist ID on mount and handle browser navigation
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const path = window.location.pathname;
+      const wishlistIdFromUrl = path.slice(1); // Remove leading slash
+
+      if (wishlistIdFromUrl && wishlistIdFromUrl !== wishlistId) {
+        // Load new wishlist from URL
+        handleLoadWishlist(wishlistIdFromUrl, true);
+      } else if (!wishlistIdFromUrl && wishlistId) {
+        // URL shows home but we have a loaded wishlist - reset state
+        setWishlistId(null);
+        setWishlistData(null);
+        setWishlistMode(null);
+      }
+    };
+
+    // Handle initial load
+    const path = window.location.pathname;
+    const wishlistIdFromUrl = path.slice(1);
+    if (wishlistIdFromUrl && !wishlistId && !hasAttemptedAutoLoad) {
+      setHasAttemptedAutoLoad(true);
+      handleLoadWishlist(wishlistIdFromUrl, true);
+    }
+
+    // Listen for browser navigation (back/forward buttons)
+    window.addEventListener("popstate", handleUrlChange);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+    };
+  }, [wishlistId]); // Depend on wishlistId to handle URL/state sync
+
+  // Use effect for loading wishlist data when wishlistId or mode changes
   useEffect(() => {
     const fetchWishlist = async () => {
       if (wishlistId && wishlistMode) {
@@ -47,6 +85,10 @@ function App() {
     setWishlistId(null);
     setWishlistData(null);
     setWishlistMode(null);
+    setHasAttemptedAutoLoad(false);
+
+    // Clear URL when returning to home
+    window.history.pushState({}, "", "/");
   };
 
   const handleSaveWishlist = async (updatedWishlist: WishlistData) => {
@@ -148,17 +190,34 @@ function App() {
       // Update state with new wishlist
       setWishlistId(newWishlistId);
       setWishlistMode("owner"); // Assume creator is the owner
+
+      // Update URL for created wishlist
+      window.history.pushState({}, "", `/${newWishlistId}`);
     } catch (error) {
       console.error("Failed to create wishlist:", error);
       throw error;
     }
   };
 
-  const handleLoadWishlist = async (id: string) => {
+  const handleLoadWishlist = async (id: string, replaceHistory = false) => {
     try {
       const data = await wishlistStore.getWishlist(id);
       setWishlistId(id);
       setWishlistData(data);
+
+      // Only update URL if it's different from current
+      const currentPath = window.location.pathname;
+      const expectedPath = `/${id}`;
+
+      if (currentPath !== expectedPath) {
+        if (replaceHistory) {
+          // Replace current history entry (for URL-based loads)
+          window.history.replaceState({}, "", expectedPath);
+        } else {
+          // Add new history entry (for manual loads)
+          window.history.pushState({}, "", expectedPath);
+        }
+      }
     } catch (error) {
       console.error("Failed to load wishlist:", error);
       throw error;
@@ -179,6 +238,7 @@ function App() {
         <WelcomeMenu
           onCreateWishlist={handleCreateWishlist}
           onLoadWishlist={handleLoadWishlist}
+          initialWishlistId={window.location.pathname.slice(1) || ""}
         />
       )}
 
