@@ -21,6 +21,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [price, setPrice] = useState("");
+  const [notes, setNotes] = useState("");
 
   const [buttonText, setButtonText] = useState("Save");
   const [modalTitle, setModalTitle] = useState("Edit Item");
@@ -48,11 +49,13 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
         setName(item.name);
         setLink(item.link);
         setPrice(item.price.toString());
+        setNotes(item.notes || "");
       } else {
         // Clear form for new item
         setName("");
         setLink("");
         setPrice("");
+        setNotes("");
       }
     }
   }, [isOpen, item, isEditingNewItem]);
@@ -93,6 +96,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
       name,
       link,
       price: parseFloat(normalizedPrice) || 0,
+      notes,
       bought: item?.bought || false,
       received: item?.received || false,
     };
@@ -131,7 +135,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
           />
         </div>
 
-        <div className="form-control mb-8">
+        <div className="form-control mb-6">
           <label className="label mb-1">
             <span className="label-text">Price (optional)</span>
           </label>
@@ -147,6 +151,19 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
               placeholder="0.00"
             />
           </div>
+        </div>
+
+        <div className="form-control mb-8">
+          <label className="label mb-1">
+            <span className="label-text">Notes (optional)</span>
+          </label>
+          <textarea
+            className="textarea textarea-bordered w-full"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Any additional notes about this item..."
+            rows={3}
+          />
         </div>
 
         <div className="modal-action">

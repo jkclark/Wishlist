@@ -55,6 +55,7 @@ const Wishlist: React.FC<WishlistProps> = ({
               <th>Name</th>
               <th>Link</th>
               <th>Price</th>
+              <th>Notes</th>
               {mode === "gifter" && <th className="text-center">Bought</th>}
               <th className="text-center">Received</th>
               <th className="w-1">{/* Edit column, w-1 forces min width */}</th>
@@ -71,6 +72,7 @@ const Wishlist: React.FC<WishlistProps> = ({
                   price={item.price}
                   bought={item.bought}
                   received={item.received}
+                  notes={item.notes || ""}
                   onUpdate={(updatedItem) => updateItem(index, updatedItem)}
                   onEdit={() => onEditItem(item, index)}
                   onDelete={() => onDeleteItem(item, index)}
@@ -117,6 +119,7 @@ const Wishlist: React.FC<WishlistProps> = ({
               price={item.price}
               bought={item.bought}
               received={item.received}
+              notes={item.notes || ""}
               onUpdate={(updatedItem) => updateItem(index, updatedItem)}
               onEdit={() => onEditItem(item, index)}
               onDelete={() => onDeleteItem(item, index)}

@@ -12,6 +12,7 @@ export class DummyWishlistStore extends WishlistStore {
         price: 99.99,
         bought: true,
         received: false,
+        notes: "These should be comfortable for long gaming sessions",
       },
       {
         name: "Smart Watch (received but not marked as bought)",
@@ -19,6 +20,7 @@ export class DummyWishlistStore extends WishlistStore {
         price: 199.99,
         bought: false,
         received: true,
+        notes: "",
       },
       {
         name: "E-Reader",
@@ -26,6 +28,7 @@ export class DummyWishlistStore extends WishlistStore {
         price: 129.99,
         bought: true,
         received: true,
+        notes: "Kindle Paperwhite preferred",
       },
       {
         name: "Any NFL Giants gear",
@@ -33,6 +36,7 @@ export class DummyWishlistStore extends WishlistStore {
         price: 0,
         bought: false,
         received: false,
+        notes: "Jersey, cap, or anything really. Go Big Blue!",
       },
       {
         name: "Smart Watch",
@@ -40,6 +44,7 @@ export class DummyWishlistStore extends WishlistStore {
         price: 199.99,
         bought: false,
         received: false,
+        notes: "",
       },
       {
         name: "E-Reader",
@@ -47,6 +52,7 @@ export class DummyWishlistStore extends WishlistStore {
         price: 129.99,
         bought: true,
         received: true,
+        notes: "",
       },
     ],
   };

@@ -18,6 +18,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
   price,
   bought,
   received,
+  notes,
   onUpdate,
   onEdit,
   onDelete,
@@ -30,6 +31,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
       price,
       bought: !bought,
       received,
+      notes,
     };
     await onUpdate(updatedItem);
   };
@@ -41,6 +43,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
       price,
       bought: !received ? true : bought,
       received: !received,
+      notes,
     };
     await onUpdate(updatedItem);
   };
@@ -90,6 +93,13 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
           className={`${shouldStrikeThroughText(bought, received, mode) ? "line-through" : ""}`}
         >
           {isNaN(price) || price <= 0 ? "" : `${price.toFixed(2)}`}
+        </td>
+        <td className="max-w-50">
+          {notes && (
+            <span className="text-base-content/70 text-sm break-words">
+              {notes}
+            </span>
+          )}
         </td>
         {mode === "gifter" && (
           <td className="text-center">
@@ -211,6 +221,11 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
             </a>
           )}
         </div>
+        {notes && (
+          <div className="mb-2">
+            <p className="text-base-content/70 text-sm">{notes}</p>
+          </div>
+        )}
         <div className="flex items-center justify-between">
           {mode === "gifter" && (
             <label className="flex cursor-pointer items-center gap-2">
