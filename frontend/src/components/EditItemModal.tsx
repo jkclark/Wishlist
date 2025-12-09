@@ -57,11 +57,42 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
     }
   }, [isOpen, item, isEditingNewItem]);
 
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only allow numbers, one period, or one comma (but not both)
+    const filtered = value.replace(/[^0-9.,]/g, "");
+
+    // Check for both period and comma
+    const hasPeriod = filtered.includes(".");
+    const hasComma = filtered.includes(",");
+
+    if (hasPeriod && hasComma) {
+      // Don't allow both - keep the existing value
+      return;
+    }
+
+    // Prevent multiple decimal separators
+    const periodCount = (filtered.match(/\./g) || []).length;
+    const commaCount = (filtered.match(/,/g) || []).length;
+
+    if (periodCount > 1 || commaCount > 1) {
+      // Don't allow multiple separators
+      return;
+    }
+
+    setPrice(filtered);
+  };
+
   const handleSave = () => {
+    // Convert comma to period for parsing if needed
+    // Necessary because parseFloat does not handle
+    // European format where comma is used as decimal separator
+    const normalizedPrice = price.replace(",", ".");
+
     const updatedItem: WishlistItemData = {
       name,
       link,
-      price: parseFloat(price) || 0,
+      price: parseFloat(normalizedPrice) || 0,
       bought: item?.bought || false,
       received: item?.received || false,
     };
@@ -109,13 +140,11 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
               $
             </span>
             <input
-              type="number"
+              type="text"
               className="input input-bordered w-full pl-7"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={handlePriceChange}
               placeholder="0.00"
-              step="0.01"
-              min="0"
             />
           </div>
         </div>
