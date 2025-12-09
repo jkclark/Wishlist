@@ -57,22 +57,35 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 border p-2 shadow"
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box bg-base-200 z-[1] w-36 gap-1 border border-b border-gray-500 p-2 shadow"
               >
                 <li>
-                  <button className="btn btn-primary" onClick={onNewLoad}>
+                  <button
+                    className="btn btn-ghost bg-base-300 flex justify-end"
+                    onClick={onNewLoad}
+                  >
                     New/Load Wishlist
                   </button>
+                </li>
+                <li>
+                  {wishlistName && (
+                    <ShareButton
+                      wishlistName={wishlistName}
+                      className="bg-base-300 btn-ghost flex justify-end"
+                    />
+                  )}
                 </li>
               </ul>
             </div>
 
             {/* Desktop menu */}
-            {wishlistName && <ShareButton wishlistName={wishlistName} />}
-            <button
-              className="btn btn-primary hidden md:flex"
-              onClick={onNewLoad}
-            >
+            {wishlistName && (
+              <ShareButton
+                wishlistName={wishlistName}
+                className="hidden md:flex"
+              />
+            )}
+            <button className="btn hidden md:flex" onClick={onNewLoad}>
               New/Load Wishlist
             </button>
           </>
