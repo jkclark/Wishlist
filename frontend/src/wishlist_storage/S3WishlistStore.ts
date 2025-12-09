@@ -3,6 +3,8 @@ import { WishlistNotFoundError, WishlistStore } from "./WishlistStore";
 
 export class S3WishlistStore extends WishlistStore {
   private baseUrl: string;
+  private saveTimeouts: Map<string, number> = new Map();
+  private readonly debounceDelay: number = 1000; // 1 second default
 
   constructor() {
     super();
@@ -82,6 +84,33 @@ export class S3WishlistStore extends WishlistStore {
   }
 
   async saveWishlist(id: string, wishlistData: WishlistData): Promise<void> {
+    // Clear any existing timeout for this wishlist
+    const existingTimeout = this.saveTimeouts.get(id);
+    if (existingTimeout) {
+      clearTimeout(existingTimeout);
+    }
+
+    // Set a new debounced save
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(async () => {
+        try {
+          await this.sendWishlistUpdateToS3(id, wishlistData);
+          this.saveTimeouts.delete(id);
+          resolve();
+        } catch (error) {
+          this.saveTimeouts.delete(id);
+          reject(error);
+        }
+      }, this.debounceDelay);
+
+      this.saveTimeouts.set(id, timeoutId);
+    });
+  }
+
+  private async sendWishlistUpdateToS3(
+    id: string,
+    wishlistData: WishlistData,
+  ): Promise<void> {
     console.log(`S3WishlistStore: Saving wishlist with id: ${id}`);
     console.log("Wishlist data:", wishlistData);
 
