@@ -11,6 +11,11 @@ import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 
 export type WishlistMode = "owner" | "gifter";
 
+// TODO:
+// - rate limit loads/saves
+// - deal with layout changing when edit/trash buttons are hidden/shown
+// - add reasonable limits to length of fields (name, link, notes)
+
 function App() {
   const wishlistStore: WishlistStore = useMemo(() => new S3WishlistStore(), []);
 
@@ -38,8 +43,8 @@ function App() {
   // Check URL for wishlist ID on mount and handle browser navigation
   useEffect(() => {
     const handleUrlChange = () => {
-      const path = window.location.pathname;
-      const wishlistIdFromUrl = path.slice(1); // Remove leading slash
+      const urlParams = new URLSearchParams(window.location.search);
+      const wishlistIdFromUrl = urlParams.get("id");
 
       if (wishlistIdFromUrl && wishlistIdFromUrl !== wishlistId) {
         // Load new wishlist from URL
@@ -53,8 +58,8 @@ function App() {
     };
 
     // Handle initial load
-    const path = window.location.pathname;
-    const wishlistIdFromUrl = path.slice(1);
+    const urlParams = new URLSearchParams(window.location.search);
+    const wishlistIdFromUrl = urlParams.get("id");
     if (wishlistIdFromUrl && !wishlistId && !hasAttemptedAutoLoad) {
       setHasAttemptedAutoLoad(true);
       handleLoadWishlist(wishlistIdFromUrl, true);
@@ -87,7 +92,7 @@ function App() {
     setWishlistMode(null);
     setHasAttemptedAutoLoad(false);
 
-    // Clear URL when returning to home
+    // Clear query parameters when returning to home
     window.history.pushState({}, "", "/");
   };
 
@@ -192,7 +197,7 @@ function App() {
       setWishlistMode("owner"); // Assume creator is the owner
 
       // Update URL for created wishlist
-      window.history.pushState({}, "", `/${newWishlistId}`);
+      window.history.pushState({}, "", `?id=${newWishlistId}`);
     } catch (error) {
       console.error("Failed to create wishlist:", error);
       throw error;
@@ -205,18 +210,15 @@ function App() {
       setWishlistId(id);
       setWishlistData(data);
 
-      // Only update URL if it's different from current
-      const currentPath = window.location.pathname;
-      const expectedPath = `/${id}`;
+      // Always update URL when loading a wishlist
+      const expectedUrl = `?id=${id}`;
 
-      if (currentPath !== expectedPath) {
-        if (replaceHistory) {
-          // Replace current history entry (for URL-based loads)
-          window.history.replaceState({}, "", expectedPath);
-        } else {
-          // Add new history entry (for manual loads)
-          window.history.pushState({}, "", expectedPath);
-        }
+      if (replaceHistory) {
+        // Replace current history entry (for URL-based loads)
+        window.history.replaceState({}, "", expectedUrl);
+      } else {
+        // Add new history entry (for manual loads)
+        window.history.pushState({}, "", expectedUrl);
       }
     } catch (error) {
       console.error("Failed to load wishlist:", error);
@@ -238,7 +240,9 @@ function App() {
         <WelcomeMenu
           onCreateWishlist={handleCreateWishlist}
           onLoadWishlist={handleLoadWishlist}
-          initialWishlistId={window.location.pathname.slice(1) || ""}
+          initialWishlistId={
+            new URLSearchParams(window.location.search).get("id") || ""
+          }
         />
       )}
 
