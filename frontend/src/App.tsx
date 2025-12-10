@@ -12,7 +12,6 @@ import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 export type WishlistMode = "owner" | "gifter";
 
 // TODO:
-// - deal with layout changing when edit/trash buttons are hidden/shown
 // - add reasonable limits to length of fields (name, link, notes)
 
 function App() {

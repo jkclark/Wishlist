@@ -125,7 +125,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
         <td>
           <div className="flex">
             {/* Edit button */}
-            {mode === "owner" && !received && (
+            {mode === "owner" && (
               <button
                 className="btn btn-sm btn-ghost"
                 onClick={onEdit}
@@ -149,7 +149,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
               </button>
             )}
             {/* Delete button */}
-            {mode === "owner" && !received && (
+            {mode === "owner" && (
               <button
                 className="btn btn-sm btn-ghost"
                 onClick={onDelete}
@@ -249,9 +249,13 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
             />
             <span className="text-sm opacity-50">Received</span>
           </label>
-          {mode === "owner" && !received && (
+          {mode === "owner" && (
             <div className="flex gap-0">
-              <button className="btn btn-sm btn-ghost" onClick={onEdit}>
+              <button
+                className="btn btn-sm btn-ghost"
+                onClick={onEdit}
+                disabled={received}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
