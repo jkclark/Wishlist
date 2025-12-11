@@ -76,38 +76,6 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
         <div className="card-body">
           {/* Mobile Layout - Vertical */}
           <div className="flex h-full flex-col justify-center md:hidden">
-            {/* Load Section */}
-            <div className="mb-4 flex flex-col items-center gap-4">
-              <span className="text-xl font-medium">Load</span>
-              <div className="flex h-[50px] w-full gap-2">
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    className="input input-bordered flex-1"
-                    value={wishlistId}
-                    onChange={(e) => setWishlistId(e.target.value)}
-                    placeholder="Enter wishlist ID"
-                  />
-                  {loadError && (
-                    <div className="text-error mt-1 ml-1 text-xs">
-                      {loadError}
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  className="btn btn-secondary w-16"
-                  onClick={handleLoad}
-                  disabled={!wishlistId.trim() || isLoading}
-                >
-                  {isLoading ? loadingElement : "Load"}
-                </button>
-              </div>
-            </div>
-
-            {/* Horizontal Divider */}
-            <div className="divider mb-6 text-lg"></div>
-
             {/* Create Section */}
             <div className="flex flex-col items-center gap-4">
               <span className="text-xl font-medium">Create</span>
@@ -136,10 +104,74 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
                 </button>
               </div>
             </div>
+
+            {/* Horizontal Divider */}
+            <div className="divider mb-6 text-lg"></div>
+
+            {/* Load Section */}
+            <div className="mb-4 flex flex-col items-center gap-4">
+              <span className="text-xl font-medium">Load</span>
+              <div className="flex h-[50px] w-full gap-2">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    className="input input-bordered flex-1"
+                    value={wishlistId}
+                    onChange={(e) => setWishlistId(e.target.value)}
+                    placeholder="Enter wishlist ID"
+                  />
+                  {loadError && (
+                    <div className="text-error mt-1 ml-1 text-xs">
+                      {loadError}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  className="btn btn-secondary w-16"
+                  onClick={handleLoad}
+                  disabled={!wishlistId.trim() || isLoading}
+                >
+                  {isLoading ? loadingElement : "Load"}
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Desktop Layout - Horizontal */}
           <div className="hidden h-full items-center justify-between md:flex">
+            {/* Create Section */}
+            <div className="flex flex-1 flex-col items-center gap-6">
+              <span className="text-xl font-medium">Create</span>
+              <div className="flex h-[100px] w-[300px] gap-2">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    className="input input-bordered flex-1"
+                    value={wishlistName}
+                    onChange={(e) => setWishlistName(e.target.value)}
+                    placeholder="Josh's Wishlist"
+                  />
+                  {createError && (
+                    <div className="text-error mt-1 ml-1 text-xs">
+                      {createError}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  className="btn btn-primary w-20"
+                  onClick={handleCreate}
+                  disabled={!wishlistName.trim() || isCreating}
+                >
+                  {isCreating ? loadingElement : "Create"}
+                </button>
+              </div>
+            </div>
+
+            {/* Vertical Divider */}
+            <div className="divider divider-horizontal text-lg">OR</div>
+
             {/* Load Section */}
             <div className="flex flex-1 flex-col items-center gap-6">
               <span className="text-xl font-medium">Load</span>
@@ -165,38 +197,6 @@ const NewOrLoadMenu: React.FC<NewOrLoadMenuProps> = ({
                   disabled={!wishlistId.trim() || isLoading}
                 >
                   {isLoading ? loadingElement : "Load"}
-                </button>
-              </div>
-            </div>
-
-            {/* Vertical Divider */}
-            <div className="divider divider-horizontal text-lg">OR</div>
-
-            {/* Create Section */}
-            <div className="flex flex-1 flex-col items-center gap-6">
-              <span className="text-xl font-medium">Create</span>
-              <div className="flex h-[100px] w-[300px] gap-2">
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    className="input input-bordered flex-1"
-                    value={wishlistName}
-                    onChange={(e) => setWishlistName(e.target.value)}
-                    placeholder="My Birthday Wishlist"
-                  />
-                  {createError && (
-                    <div className="text-error mt-1 ml-1 text-xs">
-                      {createError}
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  className="btn btn-primary w-20"
-                  onClick={handleCreate}
-                  disabled={!wishlistName.trim() || isCreating}
-                >
-                  {isCreating ? loadingElement : "Create"}
                 </button>
               </div>
             </div>
