@@ -15,7 +15,7 @@ const WelcomeMenu: React.FC<WelcomeMenuProps> = ({
   return (
     <div className="flex flex-col items-center justify-center px-4 select-none">
       <div className="mb-4 max-w-md text-center">
-        <h2 className="text-base-content mb-4 text-xl font-bold md:text-2xl">
+        <h2 className="text-primary mb-4 text-xl font-bold md:text-2xl">
           Welcome to Josh's wishlist app
         </h2>
         <p className="text-base-content opacity-70">

@@ -1,4 +1,16 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: dark --default;
+  themes: forest --default;
+}
+
+button {
+  @apply rounded-sm;
+}
+
+input {
+  @apply rounded-sm;
+}
+
+textarea {
+  @apply rounded-sm;
 }
