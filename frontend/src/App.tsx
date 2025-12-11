@@ -12,7 +12,7 @@ import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 export type WishlistMode = "owner" | "gifter";
 
 // TODO:
-// - add reasonable limits to length of fields (name, link, notes)
+// - Add an "about" modal with info
 
 function App() {
   const wishlistStore: WishlistStore = useMemo(() => new S3WishlistStore(), []);
