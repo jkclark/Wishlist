@@ -84,6 +84,11 @@ function App() {
     fetchWishlist();
   }, [wishlistId, wishlistMode, wishlistStore]);
 
+  // Set page title to wishlist name or default
+  useEffect(() => {
+    document.title = wishlistData?.name || "Wishlist";
+  }, [wishlistData]);
+
   const resetWishlistState = () => {
     setWishlistId(null);
     setWishlistData(null);
