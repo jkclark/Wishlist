@@ -1,5 +1,6 @@
 import type { WishlistData, WishlistItemData } from "@wishlist/common";
 import { useEffect, useMemo, useState } from "react";
+import AboutModal from "./components/AboutModal";
 import DeleteItemModal from "./components/DeleteItemModal";
 import EditItemModal from "./components/EditItemModal";
 import Navbar from "./components/Navbar";
@@ -10,9 +11,6 @@ import { S3WishlistStore } from "./wishlist_storage/S3WishlistStore";
 import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 
 export type WishlistMode = "owner" | "gifter";
-
-// TODO:
-// - Add an "about" modal with info
 
 function App() {
   const wishlistStore: WishlistStore = useMemo(() => new S3WishlistStore(), []);
@@ -36,8 +34,11 @@ function App() {
     index: number;
   } | null>(null);
 
+  // About modal state
+  const [aboutModalOpen, setAboutModalOpen] = useState(false);
+
   // NOTE: I felt that React Router would have been overkill for this simple single-page app,
-  // so I implemented basic URL handling manually.
+  // so I implemented basic URL query param handling manually
   // Check URL for wishlist ID on mount and handle browser navigation
   useEffect(() => {
     const handleUrlChange = () => {
@@ -236,6 +237,9 @@ function App() {
         wishlistName={wishlistData?.name}
         onNewLoad={resetWishlistState}
         showNavbarContents={!!(wishlistId && wishlistData && wishlistMode)}
+        openAboutModal={() => {
+          setAboutModalOpen(true);
+        }}
       />
 
       {/* Welcome menu shown when no wishlist is loaded */}
@@ -283,6 +287,11 @@ function App() {
         itemName={deletingItem?.name || ""}
         onConfirm={handleDeleteItemConfirm}
         onCancel={handleDeleteCancel}
+      />
+
+      <AboutModal
+        isOpen={aboutModalOpen}
+        onClose={() => setAboutModalOpen(false)}
       />
     </div>
   );

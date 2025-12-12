@@ -6,6 +6,7 @@ interface NavbarProps {
   wishlistName?: string;
   onNewLoad: () => void;
   showNavbarContents: boolean;
+  openAboutModal: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -13,6 +14,7 @@ const Navbar: React.FC<NavbarProps> = ({
   wishlistName,
   onNewLoad,
   showNavbarContents,
+  openAboutModal,
 }) => {
   // For now, don't do anything with ID. This console.log is here to allow
   // the build to succeed without "unused variable" errors.
@@ -60,6 +62,14 @@ const Navbar: React.FC<NavbarProps> = ({
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box bg-base-200 z-[1] w-36 gap-1 border border-b border-gray-500 p-2 shadow"
               >
                 <li>
+                  {wishlistName && (
+                    <ShareButton
+                      wishlistName={wishlistName}
+                      className="bg-base-300 btn-ghost flex justify-end"
+                    />
+                  )}
+                </li>
+                <li>
                   <button
                     className="btn btn-ghost bg-base-300 flex justify-end"
                     onClick={onNewLoad}
@@ -68,12 +78,12 @@ const Navbar: React.FC<NavbarProps> = ({
                   </button>
                 </li>
                 <li>
-                  {wishlistName && (
-                    <ShareButton
-                      wishlistName={wishlistName}
-                      className="bg-base-300 btn-ghost flex justify-end"
-                    />
-                  )}
+                  <button
+                    className="btn btn-ghost bg-base-300 flex justify-end"
+                    onClick={openAboutModal}
+                  >
+                    About
+                  </button>
                 </li>
               </ul>
             </div>
@@ -82,14 +92,23 @@ const Navbar: React.FC<NavbarProps> = ({
             {wishlistName && (
               <ShareButton
                 wishlistName={wishlistName}
-                className="hidden md:flex"
+                className="btn-ghost hidden md:flex"
               />
             )}
-            <button className="btn hidden md:flex" onClick={onNewLoad}>
+            <button
+              className="btn btn-ghost hidden md:flex"
+              onClick={onNewLoad}
+            >
               New/Load Wishlist
             </button>
           </>
         )}
+        <button
+          className={`btn btn-sm md:btn-md md:btn-ghost ${showNavbarContents ? "hidden opacity-100 md:flex" : "opacity-50"}`}
+          onClick={openAboutModal}
+        >
+          About
+        </button>
       </div>
     </div>
   );
