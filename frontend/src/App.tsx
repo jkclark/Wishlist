@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import WelcomeMenu from "./components/WelcomeMenu";
 import Wishlist from "./components/Wishlist";
 import WishlistModeMenu from "./components/WishlistModeMenu";
+import { addToRecentWishlists } from "./utils/recentWishlists";
 import { S3WishlistStore } from "./wishlist_storage/S3WishlistStore";
 import type { WishlistStore } from "./wishlist_storage/WishlistStore";
 
@@ -196,6 +197,9 @@ function App() {
       // Create wishlist using the store and get the new ID
       const newWishlistId = await wishlistStore.createWishlist(name);
 
+      // Add to recents
+      addToRecentWishlists(newWishlistId, name);
+
       // Update state with new wishlist
       setWishlistId(newWishlistId);
       setWishlistMode("owner"); // Assume creator is the owner
@@ -213,6 +217,9 @@ function App() {
       const data = await wishlistStore.getWishlist(id);
       setWishlistId(id);
       setWishlistData(data);
+
+      // Add to recents
+      addToRecentWishlists(id, data.name);
 
       // Always update URL when loading a wishlist
       const expectedUrl = `?id=${id}`;
