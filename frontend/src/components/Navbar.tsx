@@ -74,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     className="btn btn-ghost bg-base-300 flex justify-end"
                     onClick={onNewLoad}
                   >
-                    New/Load Wishlist
+                    Change Wishlist
                   </button>
                 </li>
                 <li>
@@ -99,7 +99,7 @@ const Navbar: React.FC<NavbarProps> = ({
               className="btn btn-ghost hidden md:flex"
               onClick={onNewLoad}
             >
-              New/Load Wishlist
+              Change Wishlist
             </button>
           </>
         )}
